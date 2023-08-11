@@ -1,36 +1,83 @@
 
-//5(a)
+import java.util.Random;
+
+ 
+
 public class HillClimbingAlgorithm {
+    public static void main(String[] args) {
+        char[] best = generateRandomSolution(13);
+        int bestScore = evaluate(best);
 
-    public static double evaluate(double x) {
-        // Example evaluation function, replace with your own
-        return -(x * x) + 10; // For finding the maximum of a simple quadratic function
-    }
+ 
 
-    public static double hillClimbing(double initial, double stepSize, int maxIterations) {
-        double currentSolution = initial;
-        double currentEvaluation = evaluate(currentSolution);
+        while (true) {
+            System.out.println("Best score so far: " + bestScore + "Solution: " + new String(best));
 
-        for (int i = 0; i < maxIterations; i++) {
-            double newSolution = currentSolution + (stepSize * (Math.random() * 2 - 1)); // Random step in range [-stepSize, stepSize]
-            double newEvaluation = evaluate(newSolution);
+ 
 
-            if (newEvaluation > currentEvaluation) {
-                currentSolution = newSolution;
-                currentEvaluation = newEvaluation;
+            if (bestScore == 0) {
+                break;
+            }
+
+ 
+
+            char[] newSolution = best.clone();
+            mutateSolution(newSolution);
+
+ 
+
+            int score = evaluate(newSolution);
+
+ 
+
+            if (score < bestScore) {
+                best = newSolution;
+                bestScore = score;
             }
         }
-
-        return currentSolution;
     }
 
-    public static void main(String[] args) {
-        double initialSolution = 2.0; // Initial guess
-        double stepSize = 0.1; // Step size for small adjustments
-        int maxIterations = 1000;
+ 
 
-        double localMaximum = hillClimbing(initialSolution, stepSize, maxIterations);
-        System.out.println("Local maximum found at: " + localMaximum);
-        System.out.println("Value at local maximum: " + evaluate(localMaximum));
+    public static char[] generateRandomSolution(int length) {
+        char[] solution = new char[length];
+        Random random = new Random();
+
+ 
+
+        for (int i = 0; i < length; i++) {
+            solution[i] = (char) (random.nextInt(94) + 32);
+        }
+
+ 
+
+        return solution;
+    }
+
+ 
+
+    public static int evaluate(char[] solution) {
+        String target = "Hello, World!";
+        int diff = 0;
+
+ 
+
+        for (int i = 0; i < target.length(); i++) {
+            char s = solution[i];
+            char t = target.charAt(i);
+            diff += Math.abs((int) s - (int) t);
+        }
+
+ 
+
+        return diff;
+    }
+
+ 
+
+    public static void mutateSolution(char[] solution) {
+        Random random = new Random();
+        int index = random.nextInt(solution.length);
+        solution[index] = (char) (random.nextInt(94) + 32);
     }
 }
